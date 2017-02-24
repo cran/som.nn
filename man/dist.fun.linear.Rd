@@ -2,7 +2,7 @@
 % Please edit documentation in R/som.nn.distance.functions.R
 \name{dist.fun.linear}
 \alias{dist.fun.linear}
-\title{Linear distance functions for topological k-NN classifier.}
+\title{Linear distance functions for topological k-NN classifier}
 \usage{
 dist.fun.linear(x, sigma = 1.1)
 }

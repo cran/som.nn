@@ -25,6 +25,9 @@
 #' each test vector in \code{x}.
 #' \code{codes} and \code{x} are one vector per row and must have
 #' the same number of columns (i.e. dimensions) and the identical column names.
+#' 
+#' \code{som.nn.visual} is the work horse for the k-NN-like classifier and normally used
+#' by calling \code{predict}.
 #'
 #' @param codes   \code{data.frame} with codebook vectors.
 #' @param data    \code{data.frame} with data to be mapped. Columns of \code{x}
@@ -39,7 +42,11 @@
 #' @export 
 som.nn.visual <- function(codes, data){
 
-  # apply will nor work on vectors (i.e. matrix with one entry):
+  # apply will not work on vectors and not on data.frames (i.e. matrix with one entry):
+  if (is.data.frame(data)){
+    data <- as.matrix(data)
+  }
+  
   if (is.matrix(data)){
     
     winners <- t(apply(data, 1, som.nn.visual.one, codes=codes))

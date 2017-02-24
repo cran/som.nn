@@ -2,7 +2,7 @@
 % Please edit documentation in R/som.nn.distance.functions.R
 \name{dist.fun.bubble}
 \alias{dist.fun.bubble}
-\title{Bubble distance functions for topological k-NN classifier.}
+\title{Bubble distance functions for topological k-NN classifier}
 \usage{
 dist.fun.bubble(x, sigma = 1.1)
 }

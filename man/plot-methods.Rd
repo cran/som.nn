@@ -17,7 +17,7 @@
 
 \item{title}{\code{logical}; if TRUE, slots name and date are used as main title.}
 
-\item{col}{Defines colours for the classes of the dataset. Possible values include:
+\item{col}{defines colours for the classes of the dataset. Possible values include:
 \code{NA}: default value; colours are generated with \code{rainbow},  
 a \code{vector} of colour definitions or a
 \code{data.frame} with categories in the first and respective colours in the second column.}
@@ -51,7 +51,7 @@ Default: NULL.}
 
 \item{add}{\code{logical}; if TRUE, points are plotted on an existing plot. This can be used to 
 stepwise plot
-points of different classes with different colours.}
+points of different classes with different colours or symbols.}
 
 \item{pch.col}{Colour of the markers for predicted samples.}
 
@@ -73,8 +73,8 @@ data(iris)
 species <- iris$Species
 
 ## train with default radius = diagonal / 2:
-som <- som.nn.train(iris, class.col = "Species", kernel = "kohonen",
-                    xdim = 15, ydim = 9, alpha = 0.2, len = 1000, 
+som <- som.nn.train(iris, class.col = "Species", kernel = "internal",
+                    xdim = 15, ydim = 9, alpha = 0.2, len = 10000, 
                     norm = TRUE, toroidal = FALSE)
 
 

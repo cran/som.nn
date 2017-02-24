@@ -61,7 +61,7 @@ norm.softmax <- function(x, t = 0.2){
 #' 
 #' @param x  vector of votes for classes
 #'
-#' @return   Vector of softmax normalised values.
+#' @return   Vector of normalised values.
 #' @export
 norm.linear <- function(x){
   
@@ -144,7 +144,7 @@ round.probabilities <- function(x, digits = 2){
 #' before and after rounding.
 #' Rounding is performed with \code{round.probabilities}.
 #' 
-#' @param  v        \code{data.frame} with rows of class probabilities.
+#' @param  votes    \code{data.frame} with rows of class probabilities.
 #' @param  classes  \code{character} vector with name of categories.
 #'                  Names must match the column names of probabilities to be
 #'                  rounded.
@@ -158,7 +158,7 @@ som.nn.round.votes <- function(votes, classes, digits = 2){
   
   # get indices of classes columns and extract:
   i <- match(classes, names(votes))
-  v <- votes[,i]
+  v <- as.matrix(votes[,i])
 
   r <- matrix(unlist(apply(v, 1, round.probabilities, digits = digits)), ncol = ncol(v), byrow = TRUE)
   r <- as.data.frame(r)

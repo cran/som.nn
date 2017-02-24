@@ -28,7 +28,7 @@
 #' @param model    model of type \code{SOMnn}.
 #' @param train    training data
 #' 
-#' @return         list of type \code{kohonen} with the trained som.
+#' @return         Vist of type \code{kohonen} with the trained som.
 #'                 See \code{\link[kohonen]{som}} for details.
 #'
 #' @export 

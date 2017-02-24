@@ -12,7 +12,7 @@ som.nn.export.kohonen(model, train)
 \item{train}{training data}
 }
 \value{
-list of type \code{kohonen} with the trained som.
+Vist of type \code{kohonen} with the trained som.
                 See \code{\link[kohonen]{som}} for details.
 }
 \description{

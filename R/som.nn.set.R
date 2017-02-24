@@ -18,16 +18,16 @@
 #
 #' Set parameters for k-NN-like classifier in som.nn model
 #'
-#' With the function parameters for the k-NN-like classification can be set for an existing self-organising 
-#' map with hexagonal tolology.
+#' Parameters for the k-NN-like classification can be set for an existing model of type SOMnn
+#' after training.
 #' 
 #' The distance function defines the behaviour of the k-nearest-neighbour algorithm.
 #' Choices for the distance function include \code{dist.fun.inverse} or \code{dist.fun.tricubic}, 
 #' as defined in this package, or any other function that accepts exactly two arguments \code{x} 
 #' (the distance) and \code{sigma} (a parameter defined by max.distance).
 #' 
-#' A data set for training must be presented to calculate the accuracy statistics of the
-#' predictor. 
+#' A data set must be presented to calculate the accuracy statistics of the
+#' modified predictor. 
 #' 
 #'
 #' @param model    model of type \code{SOMnn}.

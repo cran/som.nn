@@ -10,7 +10,7 @@ norm.linear(x)
 \item{x}{vector of votes for classes}
 }
 \value{
-Vector of softmax normalised values.
+Vector of normalised values.
 }
 \description{
 Calculates a linear normalisation for the class frequencies.

@@ -5,7 +5,7 @@
 \title{calls the specified kernel for som training.}
 \usage{
 som.nn.run.kernel(data, classes = "no classes", kernel = c("internal",
-  "SOM"), xdim, ydim, rlen = 100, alpha = 0.05, radius = 1, init,
+  "SOM"), xdim, ydim, len = 100, alpha = 0.05, radius = 1, init,
   toroidal = FALSE)
 }
 \arguments{
@@ -21,6 +21,8 @@ supervised training kernels).}
 
 \item{ydim}{number of neurons in y}
 
+\item{len}{number of steps to be trained (steps - not epochs!).}
+
 \item{alpha}{initial learning rate (decreased to 0).}
 
 \item{radius}{initial radius (decreased to 1).}
@@ -28,8 +30,6 @@ supervised training kernels).}
 \item{init}{\code{numeric} matrix or data.frame with codes for initialisation.}
 
 \item{toroidal}{true if doughnut-shaped som.}
-
-\item{len}{number of steps to be trained (steps - not epochs!).}
 }
 \value{
 list with elements \code{codes} and \code{grid}.

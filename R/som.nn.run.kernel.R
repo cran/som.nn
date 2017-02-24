@@ -38,7 +38,7 @@
 som.nn.run.kernel <- function(data, classes = "no classes",
                               kernel = c("internal", "SOM"),
                               xdim, ydim,
-                              rlen = 100, alpha = 0.05, radius = 1,
+                              len = 100, alpha = 0.05, radius = 1,
                               init, toroidal = FALSE) {
   
   init <- as.matrix(init)
@@ -54,8 +54,8 @@ som.nn.run.kernel <- function(data, classes = "no classes",
       
       cat("Training som with kernel \"SOM\". Function class::SOM is used.\n")
       # create alpha and radius fo each step:
-      alphas <- seq(from = alpha, to = 0, len = rlen)
-      radii <- seq(from = radius, to = 1.1, len = rlen)
+      alphas <- seq(from = alpha, to = 0, len = len)
+      radii <- seq(from = radius, to = 1.1, len = len)
       som <- class::SOM(data = data, grid = som.grid,
                         alpha = alphas, radii = radii, 
                         init = init)
@@ -69,14 +69,14 @@ som.nn.run.kernel <- function(data, classes = "no classes",
                             alpha = c(alpha, alpha), alphaType = "linear",
                             neigh = "gaussian", topol = "hexa",
                             radius = c(radius, radius),
-                            rlen = c(rlen, 0)) 
+                            len = c(len, 0)) 
       codes <- som$code
       
     } else if (kernel == "kohonen") {  # run kohonen::som
       
       cat("Training som with kernel \"kohonen\". Function kohonen::som is used.\n")
       som <- kohonen::som(data = data, grid = som.grid, 
-                          rlen = rlen, 
+                          len = len, 
                           alpha = c(alpha, 0.0),
                           radius = c(radius, 1.1),
                           toroidal = toroidal, n.hood = "circular",
@@ -87,8 +87,19 @@ som.nn.run.kernel <- function(data, classes = "no classes",
       
       cat("Training som with kernel \"internal\".\n")
       som <- som.nn.som.internal(data, som.grid,
-                                 rlen = rlen, alpha = alpha,
+                                 len = len, alpha = alpha,
                                  radius = radius,
+                                 init = init, toroidal = toroidal)
+      codes <- som$codes
+      
+    } else if (kernel == "gaussian") {  # run internal R-implementation with gauss kernel
+      
+      cat("Training som with kernel \"gaussian\".\n")
+      
+      ## smaller radius (== r/3), for gaussian distance
+      som <- som.nn.som.internal(data, som.grid,
+                                 len = len, alpha = alpha,
+                                 radius = radius/3,         
                                  init = init, toroidal = toroidal)
       codes <- som$codes
       
@@ -96,7 +107,7 @@ som.nn.run.kernel <- function(data, classes = "no classes",
       
       cat("Training som with kernel \"experimental\".\n")
       som <- som.nn.som.experimental(data, som.grid,
-                                 rlen = rlen, alpha = alpha,
+                                 len = len, alpha = alpha,
                                  radius = radius,
                                  init = init, toroidal = toroidal)
       codes <- som$codes
@@ -111,7 +122,7 @@ som.nn.run.kernel <- function(data, classes = "no classes",
     
     cat("Training som with custom kernel.\n")
     som <- kernel(data, classes = classes, som.grid,
-                  rlen = rlen, 
+                  len = len, 
                   alpha = alpha, radius = radius,
                   init = init, toroidal = toroidal)
     codes <- som$codes

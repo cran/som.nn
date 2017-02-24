@@ -27,10 +27,14 @@ of a model of type SOMnn.
 \details{
 The function returns the winner neuron in \code{codes} for
 each test vector in \code{x}.
-\code{x} is one vector per row and must have
+\code{x} is organised as one vector per row and must have
 the same number of columns (i.e. dimensions) and the identical column names 
 as stored in the SOMnn object.
-Probablilities are softmax normalised.
+
+If data have been normalised during training, the same normalisation is applied
+to the unknown data to be predicted.
+
+Probablilities are softmax normalised by default.
 }
 \examples{
 ## get example data and add class labels:

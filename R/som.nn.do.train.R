@@ -28,8 +28,9 @@
 #'                 One column is needed as class labels. The column with class
 #'                 lables is selected by the argument \code{class.col}.
 #'                 If class is not given, the first column is used as class labels.
-#' @param class.col  index of the column with as class labels
+#' @param class.idx  index of the column with as class labels
 #'                 (after beeing coerced to character).
+#' @param kernel   kernel to be used for training.
 #' @param xdim     dimension in x-direction.
 #' @param ydim     dimension in y-direction.
 #' @param toroidal \code{logical}; if TRUE an endless som is trained as on the
@@ -59,7 +60,7 @@
 #' @return         S4 object of type \code{\link{SOMnn}} with the trained model
 #'
 #' @keywords internal 
-som.nn.do.train <- function( x, class.idx, kernel,
+som.nn.do.train <- function( x, class.idx, kernel = "internal",
                              xdim, ydim, toroidal,
                              len, alpha, radius = 0,
                              norm, norm.center, norm.scale,
@@ -68,9 +69,10 @@ som.nn.do.train <- function( x, class.idx, kernel,
                              continue, len.total, codes   
                            ){
 
+  x <- as.data.frame(x)
   # if number of neurons higher then number of samples, increase number of samples:
   # (necessary for kohonen::som)
-  if (nrow(x) < xdim * ydim){
+  if ((kernel == "kohonen") && (nrow(x) < xdim * ydim)) {
     x.addl <- x[sample(nrow(x), xdim * ydim - nrow(x) + 10, replace = TRUE),]
     x <- rbind(x, x.addl)
   }
@@ -101,7 +103,7 @@ som.nn.do.train <- function( x, class.idx, kernel,
     }
     
     # init codes with samples from train:
-    codes <- train.x[sample(1:nrow(train.x), xdim*ydim, replace = FALSE), , drop = FALSE]
+    codes <- train.x[sample(1:nrow(train.x), xdim*ydim, replace = TRUE), , drop = FALSE]
     
   } else {
     
@@ -110,14 +112,14 @@ som.nn.do.train <- function( x, class.idx, kernel,
     }
   }
     
-  # skip training if rlen == 0:
+  # skip training if len == 0:
   if (len > 0 ) {
     
     # train SOM:
     som <- som.nn.run.kernel( data = train.x, classes = train.cl,
                               kernel,
                               xdim = xdim, ydim = ydim,
-                              rlen = len, alpha = alpha, 
+                              len = len, alpha = alpha, 
                               radius = radius, toroidal = toroidal,
                               init = codes)
   
@@ -152,10 +154,10 @@ som.nn.do.train <- function( x, class.idx, kernel,
 
 
   # create predict function:
-  som.nn.predict <- function(unk, norm.fun = norm.softmax, internal = FALSE){
+  som.nn.predict <- function(unk, norm.fun = norm.softmax){
 
     # scale, if called with new data:
-    if (!internal && norm) { unk <- scale( unk, center = norm.center, scale = norm.scale)}
+    if (norm) { unk <- scale( unk, center = norm.center, scale = norm.scale)}
     vis <- som.nn.visual(codes, unk)
 
     # distances with dist function:
@@ -188,7 +190,8 @@ som.nn.do.train <- function( x, class.idx, kernel,
   }
 
   # result assessment:
-  tr <- som.nn.predict(train.x, internal = TRUE)
+  # predict raw data (norm is done, in predict):
+  tr <- som.nn.predict(x[-class.idx])
   tr$true.class <- train.cl
 
   # create result class:

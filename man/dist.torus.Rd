@@ -11,14 +11,15 @@ dist.torus(coors)
 columns with x- and y-coordinates.}
 }
 \value{
-complete distance matrix with diagonal and upper triangle values.
+Complete distance matrix with diagonal and upper triangle values.
 }
 \description{
 Calculates the distance matrix of points on the surface of a torus.
 }
 \details{
-Torus geometry is to apply, on an endless plane that contimues on the left, 
+A rectangular plane is considered as torus (i.e. on an endless plane that contimues on the left, 
 when leaving at the right side, and in the same way connects top and bottom
-border.
+border). Distances between two points on the plane are calculated as the shortest distance
+between the points on the torus surface.
 }
 

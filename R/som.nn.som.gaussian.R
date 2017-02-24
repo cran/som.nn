@@ -16,24 +16,24 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#' Work hourse for som training.
+#' Gaussian kernel for som training.
 #' 
-#' Function is the kernel \code{internal} for som training, implemented
+#' Function is the kernel \code{gaussian} for som training, implemented
 #' in pure R.
 #'
 #'
 #' @param data     matrix with training data. 
 #' @param grid     somgrid object
 #' @param len      number of steps to be trained (steps - not epochs!).
-#' @param alpha    learning rate c(first, last).
-#' @param radius   radius c(first, last).
+#' @param alpha    learning rate.
+#' @param radius   radius.
 #' @param init     codes for initialisation.
 #' @param toroidal true if doughnut-shaped som.
 #'
 #' @return         S3 object of type \code{kohonen} with the trained som.
 #'
-#' @keywords internal 
-som.nn.som.experimental <- function(data, grid,
+#' @keywords internal
+som.nn.som.gaussian <- function(data, grid,
                                 len = 100, alpha = 0.05,
                                 radius,
                                 init, toroidal = FALSE) {

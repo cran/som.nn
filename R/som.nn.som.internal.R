@@ -24,7 +24,7 @@
 #'
 #' @param data     matrix with training data. 
 #' @param grid     somgrid object
-#' @param len      number of steps to be trained (steps - not epochs!).
+#' @param rlen      number of steps to be trained (steps - not epochs!).
 #' @param alpha    learning rate c(first, last).
 #' @param radius   radius c(first, last).
 #' @param init     codes for initialisation.
@@ -34,7 +34,7 @@
 #'
 #' @keywords internal 
 som.nn.som.internal <- function(data, grid,
-                       rlen = 100, alpha = 0.05,
+                       len = 100, alpha = 0.05,
                        radius,
                        init, toroidal = FALSE) {
   
@@ -44,9 +44,9 @@ som.nn.som.internal <- function(data, grid,
   # deltas for radius and alpha
   # (radius should never fall under 1.0):
   if (radius < 1.5) {radius.delta <- 0}
-  else {             radius.delta <- (radius-1) / rlen}
+  else {             radius.delta <- (radius-1) / len}
   
-  alpha.delta <- alpha / rlen
+  alpha.delta <- alpha / len
   
   # distances with topology:
   if (!toroidal) {
@@ -56,7 +56,7 @@ som.nn.som.internal <- function(data, grid,
   }
 
   # train rlen times:
-  samples <- sample(nrow(data), rlen, replace=TRUE)
+  samples <- sample(nrow(data), len, replace=TRUE)
   
   for ( train.i in samples) {
     

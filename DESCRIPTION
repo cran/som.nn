@@ -1,7 +1,7 @@
 Package: som.nn
 Type: Package
 Title: Topological k-NN Classifier Based on Self-Organising Maps
-Version: 1.0.3
+Version: 1.1.0
 Author: Andreas Dominik
 Maintainer: Andreas Dominik <andreas.dominik@mni.thm.de>
 Encoding: UTF-8
@@ -16,6 +16,6 @@ License: GPL-3
 LazyData: TRUE
 RoxygenNote: 5.0.1
 NeedsCompilation: no
-Packaged: 2017-02-09 10:04:33 UTC; andreas
+Packaged: 2017-02-24 13:57:57 UTC; andreas
 Repository: CRAN
-Date/Publication: 2017-02-09 19:50:17
+Date/Publication: 2017-02-24 16:47:06

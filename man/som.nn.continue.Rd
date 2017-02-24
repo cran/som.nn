@@ -68,8 +68,8 @@ data(iris)
 species <- iris$Species
 
 ## train with default radius = diagonal / 2:
-som <- som.nn.train(iris, class.col = "Species", kernel = "kohonen",
-                    xdim = 15, ydim = 9, alpha = 0.2, len = 1000, 
+som <- som.nn.train(iris, class.col = "Species", kernel = "internal",
+                    xdim = 15, ydim = 9, alpha = 0.2, len = 10000, 
                     norm = TRUE, toroidal = FALSE)
 
 

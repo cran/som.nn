@@ -28,5 +28,8 @@ The function returns the winner neuron in \code{codes} for
 each test vector in \code{x}.
 \code{codes} and \code{x} are one vector per row and must have
 the same number of columns (i.e. dimensions) and the identical column names.
+
+\code{som.nn.visual} is the work horse for the k-NN-like classifier and normally used
+by calling \code{predict}.
 }
 

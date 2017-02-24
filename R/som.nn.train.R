@@ -19,11 +19,13 @@
 #' Hexagonal som training
 #'
 #' A self-organising map with hexagonal tolology is trained and
-#' a model created for prediction of unknown samples.
+#' a model of Type SOMnn created for prediction of unknown samples.
 #' In contrast to a "normal" som, class-labels for all samples of
-#' the training set are required to build the topological model.
+#' the training set are required to build the topological model after SOM training.
 #' 
-#' Any specified custom kernel function is used for som training. The function must match the 
+#' Besides of the predefined kernels 
+#' \code{"internal", "gaussian", "SOM", "kohonen" or "som"},  
+#' any specified custom kernel function can be used for som training. The function must match the 
 #' signature \code{kernel(data, grid, rlen, alpha, radius, init, toroidal)}, with 
 #' arguments:
 #' \itemize{
@@ -48,17 +50,18 @@
 #'                 the training vector.
 #'                 One column is needed as class labels. The column with class
 #'                 lables is selected by the argument \code{class.col}.
-#'                 If class is not given, the first column is used as class labels.
+#'                
 #' @param class.col  single string or number. If class is a string, it is considered to be the
 #'                 name of the column with class labels.
 #'                 If class is a number, the respective column will be used as class labels
 #'                 (after beeing coerced to character).
 #'                 Default is 1.
-#' @param kernel   Kernel for som training. One of the predefined kernels
-#'                 \code{"internal"} == train with the R-implementation or 
-#'                 \code{"SOM"} == train with \code{\link[class]{SOM}} (\code{class::SOM}) or 
-#'                 \code{"kohonen"} == train with \code{\link[kohonen]{som}} (\code{kohonen::som}) or 
-#'                 \code{"som"} == train with \code{\link[som]{som}} (\code{som::som}). 
+#' @param kernel   kernel for som training. One of the predefined kernels
+#'                 \code{"internal"}: train with the R-implementation or 
+#'                 \code{"gaussian"}: train with the R-implementation of the Gaussian kernel or 
+#'                 \code{"SOM"}: train with \code{\link[class]{SOM}} (\code{class::SOM}) or 
+#'                 \code{"kohonen"}: train with \code{\link[kohonen]{som}} (\code{kohonen::som}) or 
+#'                 \code{"som"}: train with \code{\link[som]{som}} (\code{som::som}). 
 #'                 If a function is specified (as closure, not as character)
 #'                 the specified custom function is used for training.
 #' @param xdim     dimension in x-direction.
@@ -66,20 +69,24 @@
 #' @param toroidal \code{logical}; if TRUE an endless som is trained as on the
 #'                 surface of a torus. default: FALSE.
 #' @param len      number of steps to be trained (steps - not epochs!).
-#' @param alpha    initial training rate; default 0.02.
+#' @param alpha    initial training rate; the learning rate is decreased linearly to 0.0 for the laset training step.
+#'                 Default: 0.02.
 #' @param radius   inital radius for SOM training.
-#'                 Gaussian distance function is used, radius corresponds to sigma.
+#'                 If Gaussian distance function is used, radius corresponds to sigma. 
+#'                 The distance is decreased linearly to 1.0 for the last training step.
+#'                 If \code{radius = 0} (default), the diameter of the SOM is used as initial
+#'                 radius.
 #'
-#' @param norm     logical; if TRUE, input data is normalised with \code{scale(x, TRUE, TRUE)}.
+#' @param norm     logical; if TRUE, input data is normalised by \code{scale(x, TRUE, TRUE)}.
 #'
-#' @param dist.fun parameter for k-NN prediction. Function is used to calculate
+#' @param dist.fun parameter for k-NN prediction: Function used to calculate
 #'                 distance-dependent weights. Any distance function must accept the two parameters
 #'                 \code{x} (distance) and \code{sigma} (maximum distance to give a weight > 0.0).
 #'                 Default is \code{dist.fun.inverse}.
-#' @param max.dist parameter for k-NN prediction. Parameter \code{sigma} for dist.fun.
+#' @param max.dist parameter for k-NN prediction: Parameter \code{sigma} for dist.fun.
 #'                 Default is 2.1. In order to avoid rounding issues, it is recommended not to 
 #'                 use exact integers as limit, but values like 1.1 to make sure, that all 
-#'                 neurons with distance 1 are included.
+#'                 neurons within distance 1 are included.
 #'
 #' @param name     optional name for the model. Name will be stored as slot \code{model@name} in the
 #'                 trained model.

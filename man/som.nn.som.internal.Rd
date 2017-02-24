@@ -4,7 +4,7 @@
 \alias{som.nn.som.internal}
 \title{Work hourse for som training.}
 \usage{
-som.nn.som.internal(data, grid, rlen = 100, alpha = 0.05, radius, init,
+som.nn.som.internal(data, grid, len = 100, alpha = 0.05, radius, init,
   toroidal = FALSE)
 }
 \arguments{
@@ -20,7 +20,7 @@ som.nn.som.internal(data, grid, rlen = 100, alpha = 0.05, radius, init,
 
 \item{toroidal}{true if doughnut-shaped som.}
 
-\item{len}{number of steps to be trained (steps - not epochs!).}
+\item{rlen}{number of steps to be trained (steps - not epochs!).}
 }
 \value{
 S3 object of type \code{kohonen} with the trained som.

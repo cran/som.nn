@@ -25,7 +25,7 @@
 #'
 #' @param model    model of type \code{SOMnn}.
 #' 
-#' @return         list of type \code{SOM} with the trained som.
+#' @return         List of type \code{SOM} with the trained som.
 #'                 See \code{\link[class]{SOM}} for details.
 #'
 #' @export 

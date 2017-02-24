@@ -29,8 +29,8 @@ vectors on the som (kernel for k-NN classifier).}
 S4 object of type \code{\link{SOMnn}} with the updated model.
 }
 \description{
-With the function parameters for the k-NN-like classification can be set for an existing self-organising 
-map with hexagonal tolology.
+Parameters for the k-NN-like classification can be set for an existing model of type SOMnn
+after training.
 }
 \details{
 The distance function defines the behaviour of the k-nearest-neighbour algorithm.
@@ -38,8 +38,8 @@ Choices for the distance function include \code{dist.fun.inverse} or \code{dist.
 as defined in this package, or any other function that accepts exactly two arguments \code{x} 
 (the distance) and \code{sigma} (a parameter defined by max.distance).
 
-A data set for training must be presented to calculate the accuracy statistics of the
-predictor.
+A data set must be presented to calculate the accuracy statistics of the
+modified predictor.
 }
 \examples{
 ## get example data and add class labels:

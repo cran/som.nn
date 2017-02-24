@@ -44,7 +44,7 @@ dist.fun.tricubic <- function(x, sigma=1){
 }
 
 
-#' Inverse exponential distance functions for topological k-NN classifier.
+#' Inverse exponential distance functions for topological k-NN classifier
 #' 
 #' The function is used as distance-dependent weight \eqn{w} for k-NN voting.
 #' 
@@ -70,7 +70,7 @@ dist.fun.inverse <- function(x, sigma=1.1){
 }
 
 
-#' Linear distance functions for topological k-NN classifier.
+#' Linear distance functions for topological k-NN classifier
 #' 
 #' The function is used as distance-dependent weight \eqn{w} for k-NN voting.
 #' 
@@ -97,7 +97,7 @@ dist.fun.linear <- function(x, sigma=1.1){
 
 
 
-#' Bubble distance functions for topological k-NN classifier.
+#' Bubble distance functions for topological k-NN classifier
 #' 
 #' The function is used as distance-dependent weight \eqn{w} for k-NN voting.
 #' 

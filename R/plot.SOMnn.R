@@ -29,7 +29,7 @@
 #' 
 #' @param  x           trained som of type \code{SOMnn}.
 #' @param  title       \code{logical}; if TRUE, slots name and date are used as main title. 
-#' @param  col         Defines colours for the classes of the dataset. Possible values include:
+#' @param  col         defines colours for the classes of the dataset. Possible values include:
 #'                     \code{NA}: default value; colours are generated with \code{rainbow},  
 #'                     a \code{vector} of colour definitions or a
 #'                     \code{data.frame} with categories in the first and respective colours in the second column.
@@ -52,7 +52,7 @@
 #'                    Default: NULL.
 #' @param  add        \code{logical}; if TRUE, points are plotted on an existing plot. This can be used to 
 #'                    stepwise plot
-#'                    points of different classes with different colours.
+#'                    points of different classes with different colours or symbols.
 #' @param  pch.col    Colour of the markers for predicted samples.
 #' @param  pch        Symbol of the markers for predicted samples.
 #' @param  ...        More parameters as well as general 

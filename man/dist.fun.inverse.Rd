@@ -2,7 +2,7 @@
 % Please edit documentation in R/som.nn.distance.functions.R
 \name{dist.fun.inverse}
 \alias{dist.fun.inverse}
-\title{Inverse exponential distance functions for topological k-NN classifier.}
+\title{Inverse exponential distance functions for topological k-NN classifier}
 \usage{
 dist.fun.inverse(x, sigma = 1.1)
 }

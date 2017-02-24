@@ -10,7 +10,7 @@ som.nn.export.som(model)
 \item{model}{model of type \code{SOMnn}.}
 }
 \value{
-list of type \code{SOM} with the trained som.
+List of type \code{SOM} with the trained som.
                 See \code{\link[class]{SOM}} for details.
 }
 \description{

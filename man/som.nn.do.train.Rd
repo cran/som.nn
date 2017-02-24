@@ -4,8 +4,8 @@
 \alias{som.nn.do.train}
 \title{Work hourse for hexagonal som training}
 \usage{
-som.nn.do.train(x, class.idx, kernel, xdim, ydim, toroidal, len, alpha,
-  radius = 0, norm, norm.center, norm.scale, dist.fun, max.dist, name,
+som.nn.do.train(x, class.idx, kernel = "internal", xdim, ydim, toroidal, len,
+  alpha, radius = 0, norm, norm.center, norm.scale, dist.fun, max.dist, name,
   continue, len.total, codes)
 }
 \arguments{
@@ -16,6 +16,11 @@ the training vector.
 One column is needed as class labels. The column with class
 lables is selected by the argument \code{class.col}.
 If class is not given, the first column is used as class labels.}
+
+\item{class.idx}{index of the column with as class labels
+(after beeing coerced to character).}
+
+\item{kernel}{kernel to be used for training.}
 
 \item{xdim}{dimension in x-direction.}
 
@@ -49,9 +54,6 @@ trained model.}
 as initial codes.}
 
 \item{len.total}{number of previuos training steps.}
-
-\item{class.col}{index of the column with as class labels
-(after beeing coerced to character).}
 
 \item{model}{model of type \code{SOMnn}.}
 }

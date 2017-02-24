@@ -7,13 +7,13 @@
 som.nn.round.votes(votes, classes, digits = 2)
 }
 \arguments{
+\item{votes}{\code{data.frame} with rows of class probabilities.}
+
 \item{classes}{\code{character} vector with name of categories.
 Names must match the column names of probabilities to be
 rounded.}
 
 \item{digits}{precision; default = 2.}
-
-\item{v}{\code{data.frame} with rows of class probabilities.}
 }
 \value{
 \code{data.frame} with roundes rows of class probabilities.
