@@ -5,14 +5,23 @@
 \title{makes the actual heagonal plot.
 Adapted code from package somplot.}
 \usage{
-makehexbinplot(data, col = NA, show.legend = TRUE,
-  legend.loc = "bottomright", legend.width = 4, window.width = NA,
-  window.height = NA, onlyDefCols = FALSE, show.box = TRUE,
-  edit.cols = FALSE, show.counter.border = 0.98, ...)
+makehexbinplot(
+  data,
+  col = NA,
+  show.legend = TRUE,
+  legend.loc = "bottomright",
+  legend.width = 4,
+  window.width = NA,
+  window.height = NA,
+  onlyDefCols = FALSE,
+  show.box = TRUE,
+  edit.cols = FALSE,
+  show.counter.border = 0.98,
+  ...
+)
 }
 \description{
 makes the actual heagonal plot.
 Adapted code from package somplot.
 }
 \keyword{internal}
-

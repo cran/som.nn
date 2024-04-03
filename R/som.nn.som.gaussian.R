@@ -33,6 +33,7 @@
 #' @return         S3 object of type \code{kohonen} with the trained som.
 #'
 #' @keywords internal
+#' @importFrom utils setTxtProgressBar txtProgressBar
 som.nn.som.gaussian <- function(data, grid,
                                 len = 100, alpha = 0.05,
                                 radius,
@@ -40,7 +41,7 @@ som.nn.som.gaussian <- function(data, grid,
   
   codes <- as.matrix(init)
   data <- as.matrix(data)
-  
+ 
   # deltas for radius and alpha
   # (radius should never fall under 1.0):
   if (radius < 1.5) {radius.delta <- 0}
@@ -58,7 +59,13 @@ som.nn.som.gaussian <- function(data, grid,
   # train rlen times:
   samples <- sample(nrow(data), len, replace=TRUE)
   
-    for ( train.i in samples) {
+  i  <- 0
+  pb <- txtProgressBar(min = i, max = len, initial = i, char = ".", style = 3)
+  
+  for ( train.i in samples) {
+    
+    setTxtProgressBar(pb,i)
+    i <- i+1
     
     # select random sample:
     train <- data[train.i,]
@@ -70,7 +77,7 @@ som.nn.som.gaussian <- function(data, grid,
       taxi <- t(codes) - train
     
       # make distances:
-      dist.all <- colSums(taxi^2)
+      dist.all <- sqrt(colSums(taxi^2))
     
       # find minumum = winner:
       winner.i <- which.min(dist.all)
@@ -78,8 +85,6 @@ som.nn.som.gaussian <- function(data, grid,
     winner <- codes[winner.i,]
     
     # update codes within radius:
-    neighbours <- which(distances[winner.i,] <= radius)
-    
     codes <- codes + t(train - t(codes)) * alpha *
                      stats::dnorm(distances[winner.i,], sd = radius)
     
@@ -88,6 +93,8 @@ som.nn.som.gaussian <- function(data, grid,
     radius <- radius - radius.delta
     alpha <- alpha - alpha.delta
   }
+  
+  cat("\nTraining complete!\n\n")
   
   # make SOM-like object:
   result <- list(grid = grid, codes = codes)

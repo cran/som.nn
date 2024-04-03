@@ -73,19 +73,24 @@ norm.linear <- function(x){
 #' 
 #' Returns the index of the column with the maximum value for each row of a
 #' data.frame.
+#' 
+#' A class is only assigned, if the vote for one class is higher than for
+#' all others.
 #' If more than one element has the same maximum value, 0 is returned.
+#' 
 #'
 #' @param x  data.frame or matrix
+#' @param strict minimum for max vote
 #'
 #' @return   index of max value for each row or 0, if more
 #'           than one element has the same maximum value.
 #'           
 #' @keywords internal
-som.nn.max.row <- function(x){
+som.nn.max.row <- function(x, strict = 0.8){
 
   max.x <- apply( x, 1, function(x){
-                          m <- which( x == max(x))
-                          if (length(m) != 1) { m <- 0 }
+                          m <- which.max(x)
+                          if (x[m] < strict) {m <- 0}
                           return( m)}
                 )
   return( max.x)
@@ -127,13 +132,18 @@ make.codes.grid <- function(xdim, ydim, topo = "hexagonal"){
 #' @export
 round.probabilities <- function(x, digits = 2){
   
-  prec <- 10 ^ digits       # 0-1 to 0-100
-  x    <- x * prec
-  fl   <- floor(x)         # round off with precision
-  i    <- utils::tail(order(x - fl), round(sum(x)-sum(fl)))   # make indices of biggest remainders to be round up
-  fl[i]<- fl[i] + 1
+  prec <- 10 ^ digits                  # 0-1 to 0-100
+  x.round   <- round(x * prec)         # round off with precision
+  x.too.much <- sum(x.round) - prec
+
+  # make vector of corrections for each probablility and order witth
+  # biggest probability first:
+  x.correction <- c(rep(1,abs(x.too.much)), rep(0, length(x)-abs(x.too.much)))
+  x.correction <- x.correction * sign(x.too.much)
   
-  return(fl / prec)  # restor original percent values
+  x.round[order(x.round, decreasing = TRUE)] <- x.round[order(x.round, decreasing = TRUE)] - x.correction 
+  
+  return(x.round / prec)  # restore original percent values
 } 
 
 
@@ -162,7 +172,7 @@ som.nn.round.votes <- function(votes, classes, digits = 2){
 
   r <- matrix(unlist(apply(v, 1, round.probabilities, digits = digits)), ncol = ncol(v), byrow = TRUE)
   r <- as.data.frame(r)
-  names(r) <- names(v)
+  names(r) <- colnames(v)
   
   votes[classes] <- r[classes]
   return(votes)

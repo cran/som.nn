@@ -5,13 +5,23 @@
 \title{Plots the hexagonals and pi charts.
 Adapted code from package somplot.}
 \usage{
-hexbinpie(x, y, kat, xbnds = range(x), ybnds = range(y), hbc = NA,
-  pal = NA, hex = "gray", circ = "gray50", cnt = "black",
-  show.counter.border, ...)
+hexbinpie(
+  x,
+  y,
+  kat,
+  xbnds = range(x),
+  ybnds = range(y),
+  hbc = NA,
+  pal = NA,
+  hex = "gray",
+  circ = "gray50",
+  cnt = "black",
+  show.counter.border,
+  ...
+)
 }
 \description{
 Plots the hexagonals and pi charts.
 Adapted code from package somplot.
 }
 \keyword{internal}
-

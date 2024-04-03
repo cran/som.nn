@@ -24,7 +24,7 @@
 #'
 #' @param data     matrix with training data. 
 #' @param grid     somgrid object
-#' @param rlen      number of steps to be trained (steps - not epochs!).
+#' @param len      number of steps to be trained (steps - not epochs!).
 #' @param alpha    learning rate c(first, last).
 #' @param radius   radius c(first, last).
 #' @param init     codes for initialisation.
@@ -33,6 +33,7 @@
 #' @return         S3 object of type \code{kohonen} with the trained som.
 #'
 #' @keywords internal 
+#' @importFrom utils setTxtProgressBar txtProgressBar
 som.nn.som.internal <- function(data, grid,
                        len = 100, alpha = 0.05,
                        radius,
@@ -58,7 +59,13 @@ som.nn.som.internal <- function(data, grid,
   # train rlen times:
   samples <- sample(nrow(data), len, replace=TRUE)
   
+  i  <- 0
+  pb <- txtProgressBar(min = i, max = len, initial = i, char = ".", style = 3)
+  
   for ( train.i in samples) {
+    
+    setTxtProgressBar(pb,i)
+    i <- i+1
     
     # select random sample:
     train <- data[train.i,]
@@ -72,21 +79,26 @@ som.nn.som.internal <- function(data, grid,
     # make distances (taxi is col-wise to get rid of one t()):
     ## sqrt removed for performance:
     ## dist.all <- sqrt( colSums(taxi^2))
+    ## instead sqr(radius) als dist. limit
+    ##
     dist.all <- colSums(taxi^2)
+    r.2 <- radius * radius
     
     # find minumum = winner:
     winner.i <- which.min(dist.all)
     winner <- codes[winner.i,]
     
     # update codes within radius:
-    neighbours <- which(distances[winner.i,] <= radius)
+    neighbours <- which(distances[winner.i,] <= r.2)
     codes[neighbours,] <- codes[neighbours,] + t(train - t(codes[neighbours,])) * alpha
     
     # adapt radius and alpha (from max to 0.0):
     radius <- radius - radius.delta
     alpha <- alpha - alpha.delta
   }
-
+  
+  cat("\nTraining complete!\n\n")
+  
   # make SOM-like object:
   result <- list(grid = grid, codes = codes)
   class(result) <- c("SOM", class(result))

@@ -12,7 +12,8 @@ dist.fun.tricubic(x, sigma = 1)
 \item{sigma}{Maximum distance to be considered.}
 }
 \value{
-Distance-dependent weight.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  Distance-dependent weight.
+}\if{html}{\out{</div>}}
 }
 \description{
 The tricubic function is used as distance-dependent weight \eqn{w} for
@@ -25,4 +26,3 @@ The function returns 1.0 for \eqn{x = 0}, 0.0 for \eqn{x \ge \sigma} and
 
 for \eqn{0 < x < \sigma}.
 }
-

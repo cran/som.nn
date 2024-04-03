@@ -4,8 +4,15 @@
 \alias{som.nn.som.gaussian}
 \title{Gaussian kernel for som training.}
 \usage{
-som.nn.som.gaussian(data, grid, len = 100, alpha = 0.05, radius, init,
-  toroidal = FALSE)
+som.nn.som.gaussian(
+  data,
+  grid,
+  len = 100,
+  alpha = 0.05,
+  radius,
+  init,
+  toroidal = FALSE
+)
 }
 \arguments{
 \item{data}{matrix with training data.}
@@ -23,11 +30,11 @@ som.nn.som.gaussian(data, grid, len = 100, alpha = 0.05, radius, init,
 \item{toroidal}{true if doughnut-shaped som.}
 }
 \value{
-S3 object of type \code{kohonen} with the trained som.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    S3 object of type \code{kohonen} with the trained som.
+}\if{html}{\out{</div>}}
 }
 \description{
 Function is the kernel \code{gaussian} for som training, implemented
 in pure R.
 }
 \keyword{internal}
-

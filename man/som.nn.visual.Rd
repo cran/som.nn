@@ -13,11 +13,12 @@ som.nn.visual(codes, data)
 must have the same names as columns of \code{codes}.}
 }
 \value{
-\code{data.frame} with 2 columns:
-               \itemize{
-               \item Index of the winner neuron for each row (index starting at 1).
-               \item Distance between winner and row.
-               }
+\if{html}{\out{<div class="sourceCode">}}\preformatted{   \code{data.frame} with 2 columns:
+           \\itemize\{
+           \\item Index of the winner neuron for each row (index starting at 1).
+           \\item Distance between winner and row.
+           \}
+}\if{html}{\out{</div>}}
 }
 \description{
 Maps a sample of unknown category to a self-organising map (SOM)
@@ -30,6 +31,5 @@ each test vector in \code{x}.
 the same number of columns (i.e. dimensions) and the identical column names.
 
 \code{som.nn.visual} is the work horse for the k-NN-like classifier and normally used
-by calling \code{predict}.
+from \code{predict}.
 }
-

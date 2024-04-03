@@ -61,7 +61,7 @@
 #'
 #' @import hexbin
 #' 
-#' @example examples/example.train.R
+#' @example man/examples/example.train.R
 #' 
 #' @export 
 setMethod( f = "plot", signature = "SOMnn",
@@ -121,7 +121,7 @@ setMethod( f = "plot", signature = "SOMnn",
     predict$i <- (predict$y-1) * som@xdim + predict$x
     predict <- data.frame(i = predict$i, x = predict$x, y = predict$y)
     
-    plot.predictions(grid, predict, pch.col = pch.col, pch = pch, ...)
+    plot_predictions(grid, predict, pch.col = pch.col, pch = pch, ...)
   }
 })
 
@@ -287,7 +287,7 @@ makehexbinplot <-function(data, col = NA, show.legend = TRUE, legend.loc = "bott
 #' Plots predicted samples as points into a plotted som.
 #' 
 #' @keywords internal
-plot.predictions <- function(grid, predict, pch.col, pch, ...){
+plot_predictions <- function(grid, predict, pch.col, pch, ...){
   
   # fit grid to plot coordinates (left-bootom is (0,0) in plot, but (1,5,0.8660254) in somgrid:
   grid$x <- grid$x - grid$x[1]

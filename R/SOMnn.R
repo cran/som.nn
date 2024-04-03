@@ -46,8 +46,8 @@
 #' @slot confusion     \code{data.frame} with confusion matrix for training data.
 #' @slot measures      \code{data.frame} with classes as rows and the
 #'                     columns sensitivity, specificity and accuracy for each class.
-#' @slot predict       predict function to be used to predict unknowm samples \code{x} as
-#'                     \code{object@predict(x)}.
+#' @slot accuracy      The overall accuracy calculated based on the confusion matrix cmat:
+#'                     \eqn{acc = sum(diag(cmat)) / sum(cmat)}.
 #' @slot xdim          number of neurons in x-direction of the som.
 #' @slot ydim          number of neurons in y-direction of the som.
 #' @slot len.total     total number of training steps, performed to create the model.
@@ -55,6 +55,9 @@
 #'
 #' @slot dist.fun      \code{function}; kernel for the kNN classifier.
 #' @slot max.dist      maximum distance for the kNN classifier.
+#' @slot strict       Minimum vote for the winner (if the winner's vote is smaller than strict,
+#'                     "unknown" is reported as class label (\code{default = 0.8}).
+
 #'
 #'
 #' @name    SOMnn-class
@@ -85,15 +88,16 @@ SOMnn <- setClass(
     confusion = "data.frame",       # confusion matrix
     measures  = "data.frame",       # with classes as rows and columns:
                                     # sensitivity, specificity, accuracy
-    predict = "function",           # predict function with the model embedded.
-                                    # call: predict(data)
+    accuracy  = "numeric",
+
     xdim = "numeric",
     ydim = "numeric",
     len.total = "numeric",          # cummulative total of training steps
     toroidal = "logical",
     
-    dist.fun = "function",
-    max.dist = "numeric"
+    dist.fun = "function",         # for kNN
+    max.dist = "numeric",          # for kNN
+    strict = "numeric"             # for voting
   )
 )
 
@@ -117,6 +121,7 @@ setMethod( "show", "SOMnn",
              cat(paste("\n"))
              cat(paste("    Quality mesures:\n"))
              print(round(object@measures, digits = 2), digits = 2)
+             cat(paste("Accuracy (overall):   ", format(object@accuracy, digits=2), "\n"))
            }
 )
 
@@ -141,8 +146,7 @@ setMethod( "show", "SOMnn",
 #' @param confusion    \code{data.frame} with confusion matrix for training data.
 #' @param measures     \code{data.frame} with classes as rows and the
 #'                     columns sensitivity, specificity and accuracy for each class.
-#' @param predict      predict function to be used to predict unknowm samples \code{x}.
-#'                     Can be called as \code{object@predict(x)}.
+#' @param accuracy     Overall accuracy.
 #' @param xdim         number of neurons in x-direction of the som.
 #' @param ydim         number of neurons in y-direction of the som.
 #' @param len.total    total number of training steps, performed to create the model.
@@ -157,6 +161,8 @@ setMethod( "show", "SOMnn",
 #'                     data.
 #' @param dist.fun     \code{function}; kernel for the kNN classifier.
 #' @param max.dist     maximum distance \eqn{\sigma} for the kNN classifier.
+#' @param strict   Minimum vote for the winner (if the winner's vote is smaller than strict,
+#'                 "unknown" is reported as class label (\code{default = 0.8}).
 #' 
 #' @examples 
 #' \dontrun{
@@ -169,7 +175,7 @@ setMethod( "show", "SOMnn",
 #'               class.freqs = class.freqs,
 #'               confusion = confusion, 
 #'               measures = measures,
-#'               predict = som.nn.predict,
+#'               accuracy = accuracy,
 #'               xdim = xdim, 
 #'               ydim = ydim, 
 #'               len.total = len.total, 
@@ -178,7 +184,8 @@ setMethod( "show", "SOMnn",
 #'               norm.center = norm.center, 
 #'               norm.scale = norm.scale,
 #'               dist.fun = dist.fun, 
-#'               max.dist = max.dist)
+#'               max.dist = max.dist.
+#'               strict = strict)
 #'}
 #'
 #' @rdname initialize-methods
@@ -190,11 +197,10 @@ setMethod("initialize", "SOMnn",
                    name,
                    codes, qerror, class.idx,
                    classes, class.counts, class.freqs,
-                   confusion, measures,
-                   predict,
+                   confusion, measures, accuracy,
                    xdim, ydim, len.total, toroidal,
                    norm, norm.center, norm.scale,
-                   dist.fun, max.dist) {
+                   dist.fun, max.dist, strict) {
 
               .Object@name <- name
               .Object@codes <- codes
@@ -205,7 +211,7 @@ setMethod("initialize", "SOMnn",
               .Object@class.counts <- class.counts
               .Object@class.freqs <- class.freqs
               .Object@measures <- measures
-              .Object@predict <- predict
+              .Object@accuracy <- accuracy
               .Object@xdim <- xdim
               .Object@ydim <- ydim
               .Object@len.total <- len.total
@@ -216,6 +222,7 @@ setMethod("initialize", "SOMnn",
               .Object@norm.scale <- norm.scale
               .Object@dist.fun <- dist.fun
               .Object@max.dist <- max.dist
+              .Object@strict <- strict
 
             return(.Object)
           }

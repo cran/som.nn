@@ -4,13 +4,22 @@
 \alias{som.nn.som.internal}
 \title{Work hourse for som training.}
 \usage{
-som.nn.som.internal(data, grid, len = 100, alpha = 0.05, radius, init,
-  toroidal = FALSE)
+som.nn.som.internal(
+  data,
+  grid,
+  len = 100,
+  alpha = 0.05,
+  radius,
+  init,
+  toroidal = FALSE
+)
 }
 \arguments{
 \item{data}{matrix with training data.}
 
 \item{grid}{somgrid object}
+
+\item{len}{number of steps to be trained (steps - not epochs!).}
 
 \item{alpha}{learning rate c(first, last).}
 
@@ -19,15 +28,13 @@ som.nn.som.internal(data, grid, len = 100, alpha = 0.05, radius, init,
 \item{init}{codes for initialisation.}
 
 \item{toroidal}{true if doughnut-shaped som.}
-
-\item{rlen}{number of steps to be trained (steps - not epochs!).}
 }
 \value{
-S3 object of type \code{kohonen} with the trained som.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    S3 object of type \code{kohonen} with the trained som.
+}\if{html}{\out{</div>}}
 }
 \description{
 Function is the kernel \code{internal} for som training, implemented
 in pure R.
 }
 \keyword{internal}
-

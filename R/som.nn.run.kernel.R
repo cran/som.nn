@@ -69,21 +69,21 @@ som.nn.run.kernel <- function(data, classes = "no classes",
                             alpha = c(alpha, alpha), alphaType = "linear",
                             neigh = "gaussian", topol = "hexa",
                             radius = c(radius, radius),
-                            len = c(len, 0)) 
+                            rlen = c(len, 0)) 
       codes <- som$code
       
     } else if (kernel == "kohonen") {  # run kohonen::som
       
       cat("Training som with kernel \"kohonen\". Function kohonen::som is used.\n")
       som <- kohonen::som(data = data, grid = som.grid, 
-                          len = len, 
+                          rlen = len, 
                           alpha = c(alpha, 0.0),
                           radius = c(radius, 1.1),
                           toroidal = toroidal, n.hood = "circular",
                           keep.data = FALSE)
       codes <- som$codes
       
-    } else if (kernel == "internal") {  # run internal R-implementation
+    } else if ((kernel == "internal") || (kernel == "bubble")){  # run internal R-implementation
       
       cat("Training som with kernel \"internal\".\n")
       som <- som.nn.som.internal(data, som.grid,
@@ -97,7 +97,7 @@ som.nn.run.kernel <- function(data, classes = "no classes",
       cat("Training som with kernel \"gaussian\".\n")
       
       ## smaller radius (== r/3), for gaussian distance
-      som <- som.nn.som.internal(data, som.grid,
+      som <- som.nn.som.gaussian(data, som.grid,
                                  len = len, alpha = alpha,
                                  radius = radius/3,         
                                  init = init, toroidal = toroidal)

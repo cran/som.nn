@@ -18,7 +18,7 @@ Vector of softmax normalised values.
 Calculates a softmax-like normalisation for the class frequencies.
 }
 \details{
-Softmax function is applied to a vector to squeeze the values in a way that they sum up 
+Softmax function is applied to a vector to squeeze the values in a way that they sum up
 to 1.0:
 
 \code{som.nn.softmax(x) = exp(x/T) / sum(exp(x/T))}
@@ -27,4 +27,3 @@ Low values for \code{T} result in a
 strong separation of output values. High values for \code{T}
 make output values more equal.
 }
-

@@ -42,6 +42,7 @@
 #' @param dist.fun distance function for weighting distances between codebook
 #'                 vectors on the som (kernel for k-NN classifier).
 #' @param max.dist maximum distance to be considered by the nearest-neighbour counting.
+#' @param strict   strictness for class label assignment. Default = 0.8.
 #' @param name     new name of the model.               
 #'
 #' @return         S4 object of type \code{\link{SOMnn}} with the updated model.
@@ -49,38 +50,19 @@
 #' @seealso \code{\link{dist.fun.bubble}}, \code{\link{dist.fun.linear}}, 
 #'          \code{\link{dist.fun.inverse}}, \code{\link{dist.fun.tricubic}}.
 #'          
-#' @example examples/example.predict.R
+#' @example man/examples/example.predict.R
 #'
 #' @export 
-som.nn.set <- function( 
-  model, x, 
-  dist.fun = NULL, max.dist = -1, name = ""){
+som.nn.set <- function( model, x, 
+                        dist.fun=NULL, max.dist=NULL, strict=NULL, name=NULL){
   
-  class.idx <- model@class.idx
-  
-  len.total <- model@len.total
-  xdim <- model@xdim
-  ydim <- model@ydim
-  toroidal <- model@toroidal
-  
-  norm <- model@norm
-  norm.center <- model@norm.center
-  norm.scale <- model@norm.scale
-  
-  if (is.null(dist.fun)) dist.fun <- model@dist.fun
-  if (max.dist < 0) max.dist <- model@max.dist
-  if (name == "") name <- model@name
-  
-  codes <- model@codes
-  
-  
-  # run som:
-  return(som.nn.do.train( x = x, class.idx = class.idx,
-                          xdim = xdim, ydim = ydim, toroidal = toroidal,
-                          len = 0, alpha = 1, radius = 1,
-                          norm = norm, norm.center = norm.center, norm.scale = norm.scale,
-                          dist.fun = dist.fun, max.dist = max.dist,                      
-                          name = name,
-                          continue = TRUE, len.total = len.total, codes = codes))
-}
+  new.model <- model
+  if (!is.null(dist.fun)) new.model@dist.fun <- dist.fun
+  if (!is.null(max.dist)) new.model@max.dist <- max.dist
+  if (!is.null(name)) new.model@name <- name
 
+  # run som:
+  #
+  new.model <- som.nn.validate(new.model, x)
+  return(new.model)
+}

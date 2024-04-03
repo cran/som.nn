@@ -49,13 +49,16 @@
 #'                 In order to avoid rounding issues, it is recommended not to 
 #'                 use exact integers as limit, but values like 1.1 to make sure, that all 
 #'                 neurons with distance 1 are included.
+#' @param strict   difference of maximum votes to assign class label
+#'                 (if the difference between the to two votes is smaller or equal to 
+#'                 strict, unknown is predicted). \code{default = 0.3.}
 #'
 #' @param name     name for the model. Name will be stored as slot \code{model@name} in the
 #'                 trained model.
 #' @param continue logical; if TRUE, the codebook vectors of the model, given in argument \code{model} will be used
 #'                 as initial codes.
 #' @param len.total number of previuos training steps.
-#' @param model    model of type \code{SOMnn}.
+#' @param codes    codes of a model to be used for initialisation.
 #'
 #' @return         S4 object of type \code{\link{SOMnn}} with the trained model
 #'
@@ -64,15 +67,16 @@ som.nn.do.train <- function( x, class.idx, kernel = "internal",
                              xdim, ydim, toroidal,
                              len, alpha, radius = 0,
                              norm, norm.center, norm.scale,
-                             dist.fun, max.dist,          
+                             dist.fun, max.dist, strict,        
                              name,
-                             continue, len.total, codes   
+                             continue, len.total, codes=NULL   
                            ){
 
   x <- as.data.frame(x)
+  x[[class.idx]] <- as.character(x[[class.idx]])
   # if number of neurons higher then number of samples, increase number of samples:
   # (necessary for kohonen::som)
-  if ((kernel == "kohonen") && (nrow(x) < xdim * ydim)) {
+  if ((typeof(kernel) == "character") && (kernel == "kohonen") && (nrow(x) < xdim * ydim)) {
     x.addl <- x[sample(nrow(x), xdim * ydim - nrow(x) + 10, replace = TRUE),]
     x <- rbind(x, x.addl)
   }
@@ -94,6 +98,7 @@ som.nn.do.train <- function( x, class.idx, kernel = "internal",
   len.total <- len.total + len
 
   # init and run som:
+  #
   if (!continue) {
     
     if (norm) {
@@ -103,13 +108,17 @@ som.nn.do.train <- function( x, class.idx, kernel = "internal",
     }
     
     # init codes with samples from train:
+    #
     codes <- train.x[sample(1:nrow(train.x), xdim*ydim, replace = TRUE), , drop = FALSE]
     
-  } else {
+  } else {    # continue:
     
     if (norm) {
       train.x <- scale(train.x, center = norm.center, scale = norm.scale)
     }
+    # use codes from existing model:
+    #
+    codes <- codes
   }
     
   # skip training if len == 0:
@@ -133,7 +142,7 @@ som.nn.do.train <- function( x, class.idx, kernel = "internal",
   # count class hits and normalise to 1:
   #
   vis <- som.nn.visual(codes, train.x)
-  vis$true.class <- train.cl
+  vis$true.class <- as.character(train.cl)
   
   qerror <- sum(vis$distance) / length(vis$distance)
   
@@ -152,102 +161,43 @@ som.nn.do.train <- function( x, class.idx, kernel = "internal",
   sums[sums == 0] <- 1          # no div by 0
   class.freqs <- class.counts / sums
 
-
-  # create predict function:
-  som.nn.predict <- function(unk, norm.fun = norm.softmax){
-
-    # scale, if called with new data:
-    if (norm) { unk <- scale( unk, center = norm.center, scale = norm.scale)}
-    vis <- som.nn.visual(codes, unk)
-
-    # distances with dist function:
-    if (!toroidal) {
-      distances <- as.matrix(stats::dist(codes.coors[,c("x","y")], diag = TRUE, upper = TRUE))
-    } else {
-      distances <- as.matrix(dist.torus(codes.coors[,c("x","y")]))
-    }
-
-    weights <- dist.fun(distances, sigma = max.dist)
-    votes <- lapply(vis$winner, function(winner){
-                             vote <- colSums( class.freqs * weights[winner,])  
-                           })
-   
-    # softmax or linear normalisation:
-    votes <- lapply(votes, norm.fun)
-    votes <- as.data.frame(matrix(unlist(votes), ncol = length(classes), byrow = TRUE))
-    names(votes) <- classes
-
-    # report only %-values:
-    votes$prediction <- som.nn.max.row(votes)
-    votes$pred.class <- c("unknown",classes)[votes$prediction + 1]
-    votes <- som.nn.round.votes(votes, classes, digits = 2)
-    
-    # add mapped neuron to result:
-    winners <- data.frame(winner = vis$winner, 
-                          x = (vis$winner -1) %% xdim + 1,
-                          y = (vis$winner -1) %/% xdim +1)
-    return( as.data.frame(c(winners,votes)))
-  }
-
   # result assessment:
-  # predict raw data (norm is done, in predict):
-  tr <- som.nn.predict(x[-class.idx])
-  tr$true.class <- train.cl
+  cat("Calculate predictions for training data ...")
+
+
+  # predict raw data (nm is done, in predict):
+  # (1st make prelim. model for predict)
+  new.model <- methods::new("SOMnn", name = name,
+                            codes = codes,
+                            qerror = qerror,
+                            classes = classes, class.idx= class.idx,
+                            class.counts = class.counts, class.freqs = class.freqs,
+                            confusion = data.frame(), measures = data.frame(), accuracy = 0.0,
+                            xdim = xdim, ydim = ydim, len.total = len.total, toroidal = toroidal,
+                            norm = norm, norm.center = norm.center, norm.scale = norm.scale,
+                            strict = strict,
+                            dist.fun = dist.fun, max.dist = max.dist)
+  
+  prediction <- predict(new.model, x[-class.idx])
+  prediction$pred.class <- as.character(prediction$pred.class)
 
   # create result class:
-  # (1) confusion matrix:
-  confusion <-
-    lapply(seq_along(classes),
-         function(true){
-           unlist( lapply(seq_along(classes),
-                     function(pred)
-                       return( nrow(tr[tr$true.class==classes[true] & tr$pred.class==classes[pred],]))
-           ))
-         })
-
-  confusion <- as.data.frame(matrix(unlist( confusion), ncol = length(classes), byrow = FALSE))
-  colnames( confusion) <- paste("true.", classes, sep="")
-  rownames( confusion) <- paste("pred.", classes, sep="")
-
-  # (2) Sensistivity (True Positive)
-  sens <- unlist( lapply(classes, function(cl){
-                           true.pos <- nrow(tr[tr$true.class==cl & tr$pred.class==cl,])
-                           act.pos  <- nrow(tr[tr$true.class==cl,])
-                           return( true.pos / act.pos)
-                           # confusion[paste("pred.", cl, sep=""),paste("true.", cl, sep="")] / nrow(tr[tr$true.class==cl,])
-                        }))
-  names(sens) <- classes
-
-  # (3) Specificity (True Negative, 1- FP)
-  spec <- unlist( lapply(classes, function(cl){
-                            true.neg <- nrow(tr[tr$true.class!=cl & tr$pred.class!=cl,])
-                            act.neg  <- nrow(tr[tr$true.class!=cl,])
-                            return( true.neg / act.neg)
-                        }))
-  names(spec) <- classes
-
-  # (4) Accuracy
-  acc <- unlist( lapply(classes, function(cl){
-                            true.pos <- nrow(tr[tr$true.class==cl & tr$pred.class==cl,])
-                            true.neg <- nrow(tr[tr$true.class!=cl & tr$pred.class!=cl,])
-                            return( (true.pos + true.neg) / nrow(tr))
-                        }))
-  names(acc) <- classes
-
-  measures <- data.frame(sensitivity = sens, specificity = spec, accuracy = acc)
-
-
-
+  cat("Calculate accuracy for training data ...")
+  
+  confusion <- som.nn.confusion(prediction, x[[class.idx]])
+  measures <- som.nn.accuracy(prediction, x[[class.idx]])
+  accuracy <- som.nn.all.accuracy(prediction, x[[class.idx]])
+  
   # create model object:
   new.model <- methods::new("SOMnn", name = name,
                    codes = codes,
                    qerror = qerror,
                    classes = classes, class.idx= class.idx,
                    class.counts = class.counts, class.freqs = class.freqs,
-                   confusion = confusion, measures = measures,
-                   predict = som.nn.predict,
+                   confusion = confusion, measures = measures, accuracy = accuracy,
                    xdim = xdim, ydim = ydim, len.total = len.total, toroidal = toroidal,
                    norm = norm, norm.center = norm.center, norm.scale = norm.scale,
+                   strict = strict,
                    dist.fun = dist.fun, max.dist = max.dist)
 
   return( new.model)

@@ -12,7 +12,8 @@ dist.fun.linear(x, sigma = 1.1)
 \item{sigma}{Maximum distance to be considered. Default is 1.1.}
 }
 \value{
-Distance-dependent weight.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{  Distance-dependent weight.
+}\if{html}{\out{</div>}}
 }
 \description{
 The function is used as distance-dependent weight \eqn{w} for k-NN voting.
@@ -24,4 +25,3 @@ The function returns 1.0 for \eqn{x = 0}, 0.0 for \eqn{x \ge \sigma} and
 
 for \eqn{0 < x < \sigma}.
 }
-

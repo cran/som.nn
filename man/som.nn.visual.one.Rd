@@ -13,10 +13,9 @@ som.nn.visual.one(one, codes)
 one code per row}
 }
 \value{
-vector with 2 elements: indes of winner and qerror
+vector with 2 elements: index of winner and qerror
 }
 \description{
 Working hourse function for visual.
 }
 \keyword{internal}
-

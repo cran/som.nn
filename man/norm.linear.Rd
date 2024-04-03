@@ -16,14 +16,13 @@ Vector of normalised values.
 Calculates a linear normalisation for the class frequencies.
 }
 \details{
-The function is applied to a vector to squeeze the values in a way that they sum up 
+The function is applied to a vector to squeeze the values in a way that they sum up
 to 1.0:
 
 \code{som.nn.linnorm(x) = x / sum(x)}
 
-Linear normalisation is used to normalise class distrubution during 
-prediction. Results seems often more reasonable, compared to softmax. The 
+Linear normalisation is used to normalise class distrubution during
+prediction. Results seems often more reasonable, compared to softmax. The
 S4 \code{predict} function for Class \code{SOMnn} allows to specify
 the normalisation function as parameter.
 }
-

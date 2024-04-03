@@ -27,7 +27,7 @@
 #' the same number of columns (i.e. dimensions) and the identical column names.
 #' 
 #' \code{som.nn.visual} is the work horse for the k-NN-like classifier and normally used
-#' by calling \code{predict}.
+#' from \code{predict}.
 #'
 #' @param codes   \code{data.frame} with codebook vectors.
 #' @param data    \code{data.frame} with data to be mapped. Columns of \code{x}
@@ -39,7 +39,8 @@
 #'                \item Distance between winner and row.
 #'                }
 #'
-#' @export 
+#' @export
+#' @importFrom utils setTxtProgressBar txtProgressBar
 som.nn.visual <- function(codes, data){
 
   # apply will not work on vectors and not on data.frames (i.e. matrix with one entry):
@@ -49,7 +50,22 @@ som.nn.visual <- function(codes, data){
   
   if (is.matrix(data)){
     
-    winners <- t(apply(data, 1, som.nn.visual.one, codes=codes))
+##    winners <- t(apply(data, 1, som.nn.visual.one, codes=codes))
+    cat("Mapping training vectors to SOM:\n")
+    
+    winners <- matrix(nrow=nrow(data),ncol=2)
+    pb <- txtProgressBar(min = 1, max = nrow(data), initial = 1, char = ".", style = 3)
+    
+    for (i in 1:nrow(data)){
+      
+      setTxtProgressBar(pb,i)
+      
+      winner <- som.nn.visual.one(data[i,], codes)
+      winners[i,1] <- winner[1]
+      winners[i,2] <- winner[2]
+    }
+      
+    cat("\n")
     result <- data.frame(winner = winners[,1], distance = winners[,2])
   
   } else {
@@ -70,7 +86,7 @@ som.nn.visual <- function(codes, data){
 #'              one code per row
 #' @param one   \code{numeric} vector to be mapped
 #' 
-#' @return vector with 2 elements: indes of winner and qerror
+#' @return vector with 2 elements: index of winner and qerror
 #' 
 #' @keywords internal
 som.nn.visual.one <- function(one, codes){

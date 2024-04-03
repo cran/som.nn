@@ -52,7 +52,7 @@
 #'                 One column is needed as class labels. The column with class
 #'                 lables is selected by the slot \code{class.idx} of the model.
 #' @param kernel   Kernel for som training. One of the predefined kernels
-#'                 \code{"internal"} == train with the R-implementation or 
+#'                 \code{"bubble"} and \code{"gaussian"} == train with the R-implementation or 
 #'                 \code{"SOM"} == train with \code{\link[class]{SOM}} or 
 #'                 \code{"kohonen"} == train with \code{\link[kohonen]{som}} (\code{kohonen::som}) or 
 #'                 \code{"som"} == train with \code{\link[som]{som}} (\code{som::som}). 
@@ -65,7 +65,7 @@
 #'
 #' @return         S4 object of type \code{\link{SOMnn}} with the trained model
 #'
-#' @example examples/example.train.R
+#' @example man/examples/example.train.R
 #' 
 #' @export 
 som.nn.continue <- function( 
@@ -87,6 +87,7 @@ som.nn.continue <- function(
   
   dist.fun <- model@dist.fun
   max.dist <- model@max.dist
+  strict   <- model@strict
   name <- model@name
   
   codes <- model@codes
@@ -96,7 +97,7 @@ som.nn.continue <- function(
                           xdim = xdim, ydim = ydim, toroidal = toroidal,
                           len = len, alpha = alpha, radius = radius,
                           norm = norm, norm.center = norm.center, norm.scale = norm.scale,
-                          dist.fun = dist.fun, max.dist = max.dist,                      
+                          dist.fun = dist.fun, max.dist = max.dist, strict = strict,                    
                           name = name,
                           continue = TRUE, len.total = len.total, codes = codes))
 }

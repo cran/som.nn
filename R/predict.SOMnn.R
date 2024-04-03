@@ -46,12 +46,50 @@
 #'                    as category index (column name \code{prediction}) and
 #'                    class label (column name \code{pred.class}).
 #'                    
-#' @example examples/example.predict.R
+#' @example man/examples/example.predict.R
 #'
 #' @export 
 setMethod( f = "predict", signature = "SOMnn",
            definition = function(object, x){
 
   som <- object
-  return( som@predict(x))
+  norm.fun <- norm.softmax
+  
+  # remove unused colums:
+  x <- x[names(x) %in% colnames(som@codes)]
+  
+  # scale, if called with new data:
+  if (som@norm) { x <- scale( x, center = som@norm.center, scale = som@norm.scale)}
+  vis <- som.nn.visual(som@codes, x)
+  
+  # distances with dist function:
+  codes.coors <- make.codes.grid(som@xdim, som@ydim, topo = "hexagonal")
+  if (!som@toroidal) {
+    distances <- as.matrix(stats::dist(codes.coors[,c("x","y")], diag = TRUE, upper = TRUE))
+  } else {
+    distances <- as.matrix(dist.torus(codes.coors[,c("x","y")]))
+  }
+  
+  weights <- som@dist.fun(distances, sigma = som@max.dist)
+  votes <- lapply(vis$winner, function(winner){
+    vote <- colSums( som@class.freqs * weights[winner,])  
+  })
+  
+  # softmax or linear normalisation:
+  votes <- lapply(votes, norm.fun)
+  votes <- as.data.frame(matrix(unlist(votes), ncol = length(som@classes), byrow = TRUE))
+  names(votes) <- som@classes
+  
+  # report only %-values:
+  votes$prediction <- som.nn.max.row(votes, som@strict)
+  votes$pred.class <- as.character(c("unknown",som@classes)[votes$prediction + 1])
+  votes <- som.nn.round.votes(votes, som@classes, digits = 2)
+  
+  # add mapped neuron to result:
+  winners <- data.frame(winner = vis$winner, 
+                        x = (vis$winner -1) %% som@xdim + 1,
+                        y = (vis$winner -1) %/% som@xdim +1)
+  prediction <- as.data.frame(c(winners,votes))
+  
+  return( prediction)
 })

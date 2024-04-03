@@ -7,9 +7,8 @@
 make.codes.grid(xdim, ydim, topo = "hexagonal")
 }
 \description{
-Coordinates of neurons of a som are calculated by 
+Coordinates of neurons of a som are calculated by
 calling \code{\link[class]{somgrid}} to be consistent with
 other som/kohonen packages.
 }
 \keyword{internal}
-

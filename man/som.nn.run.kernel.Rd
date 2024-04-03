@@ -4,12 +4,21 @@
 \alias{som.nn.run.kernel}
 \title{calls the specified kernel for som training.}
 \usage{
-som.nn.run.kernel(data, classes = "no classes", kernel = c("internal",
-  "SOM"), xdim, ydim, len = 100, alpha = 0.05, radius = 1, init,
-  toroidal = FALSE)
+som.nn.run.kernel(
+  data,
+  classes = "no classes",
+  kernel = c("internal", "SOM"),
+  xdim,
+  ydim,
+  len = 100,
+  alpha = 0.05,
+  radius = 1,
+  init,
+  toroidal = FALSE
+)
 }
 \arguments{
-\item{data}{\code{numeric} matrix or data.frame with training data. 
+\item{data}{\code{numeric} matrix or data.frame with training data.
 Only numeric columns of data.frame are used for training.}
 
 \item{classes}{\code{character} vector with class labels (only necessary for
@@ -32,10 +41,10 @@ supervised training kernels).}
 \item{toroidal}{true if doughnut-shaped som.}
 }
 \value{
-list with elements \code{codes} and \code{grid}.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    list with elements \code{codes} and \code{grid}.
+}\if{html}{\out{</div>}}
 }
 \description{
 calls the specified kernel for som training.
 }
 \keyword{internal}
-

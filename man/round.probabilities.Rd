@@ -15,11 +15,10 @@
 Rounds a vector of probabilities preserving their sum.
 }
 \details{
-In general, if a vector of floating point values is rounded, 
+In general, if a vector of floating point values is rounded,
 the sum is not preserverd.
-For a vector of probabilities (which sum up to 1.0), this may lead to 
+For a vector of probabilities (which sum up to 1.0), this may lead to
 strange results.
-This function rounds all values of the vector and takes care, that 
+This function rounds all values of the vector and takes care, that
 the sum ist not changed (with a precision given in \code{digits}).
 }
-

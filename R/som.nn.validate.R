@@ -39,36 +39,40 @@
 #' @return         S4 object of type \code{\link{SOMnn}} with the unchanged model and the
 #'                 test statistics for the test data.
 #'
-#' @example examples/example.train.R
+#' @example man/examples/example.train.R
 #' 
 #' @export 
 som.nn.validate <- function( model, x){
 
-
+  name = paste("Validation of", model@name)
+  
+  # make data for prediction and calculations:
   class.idx <- model@class.idx
+  unk <- x[-class.idx]
+  class.labels <- x[[class.idx]]
 
-  len.total <- model@len.total
-  xdim <- model@xdim
-  ydim <- model@ydim
-  toroidal <- model@toroidal
+  #
+  # validate:
+  #
+  cat("Calculate predictions for training data ...")
+  prediction <- predict(model, unk)
   
-  norm <- model@norm
-  norm.center <- model@norm.center
-  norm.scale <- model@norm.scale
+  cat("Calculate accuracy for training data ...")
+  confusion <- som.nn.confusion(prediction, class.labels)
+  measures <- som.nn.accuracy(prediction, class.labels)
+  accuracy <- som.nn.all.accuracy(prediction, x[[class.idx]])
   
-  dist.fun <- model@dist.fun
-  max.dist <- model@max.dist
-  name <- paste("Test of model:", model@name)
+  # create model object:
+  new.model <- methods::new("SOMnn", name = name,
+                            codes = model@codes,
+                            qerror = model@qerror,
+                            classes = model@classes, class.idx= class.idx,
+                            class.counts = model@class.counts, class.freqs = model@class.freqs,
+                            xdim = model@xdim, ydim = model@ydim, len.total = model@len.total, toroidal = model@toroidal,
+                            norm = model@norm, norm.center = model@norm.center, norm.scale = model@norm.scale,
+                            dist.fun = model@dist.fun, max.dist = model@max.dist, strict = model@strict,
+                            confusion = confusion, measures = measures, accuracy = accuracy)
   
-  codes <- model@codes
-  
-  # run som:
-  return(som.nn.do.train( x = x, class.idx = class.idx, kernel = "internal",
-                          xdim = xdim, ydim = ydim, toroidal = toroidal,
-                          len = 0, alpha = 0.1, radius = 1.0,
-                          norm = norm, norm.center = norm.center, norm.scale = norm.scale,
-                          dist.fun = dist.fun, max.dist = max.dist,                      
-                          name = name,
-                          continue = TRUE, len.total = len.total, codes = codes))
+  return( new.model)
 }
 

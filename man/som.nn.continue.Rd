@@ -4,8 +4,14 @@
 \alias{som.nn.continue}
 \title{Continue hexagonal som training}
 \usage{
-som.nn.continue(model, x, kernel = "internal", len = 0, alpha = 0.2,
-  radius = 0)
+som.nn.continue(
+  model,
+  x,
+  kernel = "internal",
+  len = 0,
+  alpha = 0.2,
+  radius = 0
+)
 }
 \arguments{
 \item{model}{model of type \code{SOMnn}.}
@@ -20,10 +26,10 @@ One column is needed as class labels. The column with class
 lables is selected by the slot \code{class.idx} of the model.}
 
 \item{kernel}{Kernel for som training. One of the predefined kernels
-\code{"internal"} == train with the R-implementation or 
-\code{"SOM"} == train with \code{\link[class]{SOM}} or 
-\code{"kohonen"} == train with \code{\link[kohonen]{som}} (\code{kohonen::som}) or 
-\code{"som"} == train with \code{\link[som]{som}} (\code{som::som}). 
+\code{"bubble"} and \code{"gaussian"} == train with the R-implementation or
+\code{"SOM"} == train with \code{\link[class]{SOM}} or
+\code{"kohonen"} == train with \code{\link[kohonen]{som}} (\code{kohonen::som}) or
+\code{"som"} == train with \code{\link[som]{som}} (\code{som::som}).
 If a function is specified (as closure, not as character)
 the specified custom function is used for training.}
 
@@ -35,7 +41,8 @@ the specified custom function is used for training.}
 If Gaussian distance function is used, radius corresponds to sigma.}
 }
 \value{
-S4 object of type \code{\link{SOMnn}} with the trained model
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    S4 object of type \code{\link{SOMnn}} with the trained model
+}\if{html}{\out{</div>}}
 }
 \description{
 An existing self-organising map with hexagonal tolology is further trained and
@@ -44,22 +51,22 @@ In contrast to a "normal" som, class-labels for all samples of
 the training set are required to build the model.
 }
 \details{
-Any specified custom kernel function is used for som training. The function must match the 
-signature \code{kernel(data, grid, rlen, alpha, radius, init, toroidal)}, with 
+Any specified custom kernel function is used for som training. The function must match the
+signature \code{kernel(data, grid, rlen, alpha, radius, init, toroidal)}, with
 arguments:
 \itemize{
-  \item \code{data} \code{numeric} matrix of training data; one sample per row
-  \item \code{classes:} optional \code{charater} vector of classes for training data
-  \item \code{grid} somgrid, generated with \code{\link[class]{somgrid}}
-  \item \code{rlen} number of training steps
-  \item \code{alpha} training rate
-  \item \code{radius} training radius
-  \item \code{init} \code{numeric} matrix of initial codebook vectors; one code per row
-  \item \code{toroidal} \code{logical}; TRUE, if the topology of grid is toroidal
+\item \code{data} \code{numeric} matrix of training data; one sample per row
+\item \code{classes:} optional \code{charater} vector of classes for training data
+\item \code{grid} somgrid, generated with \code{\link[class]{somgrid}}
+\item \code{rlen} number of training steps
+\item \code{alpha} training rate
+\item \code{radius} training radius
+\item \code{init} \code{numeric} matrix of initial codebook vectors; one code per row
+\item \code{toroidal} \code{logical}; TRUE, if the topology of grid is toroidal
 }
-The returned value must be a list with at minimum one element 
+The returned value must be a list with at minimum one element
 \itemize{
-  \item \code{codes:} \code{numeric} matrix of result codebook vectors; one code per row
+\item \code{codes:} \code{numeric} matrix of result codebook vectors; one code per row
 }
 }
 \examples{
@@ -68,14 +75,15 @@ data(iris)
 species <- iris$Species
 
 ## train with default radius = diagonal / 2:
+rlen <- 500
 som <- som.nn.train(iris, class.col = "Species", kernel = "internal",
-                    xdim = 15, ydim = 9, alpha = 0.2, len = 10000, 
+                    xdim = 15, ydim = 9, alpha = 0.2, len = rlen, 
                     norm = TRUE, toroidal = FALSE)
 
 
 ## continue training with different alpha and radius;
-som <- som.nn.continue(som, iris, alpha = 0.02, len=1000, radius = 5)
-som <- som.nn.continue(som, iris, alpha = 0.02, len=1000, radius = 2)
+som <- som.nn.continue(som, iris, alpha = 0.02, len=500, radius = 5)
+som <- som.nn.continue(som, iris, alpha = 0.02, len=500, radius = 2)
 
 ## predict some samples:
 unk <- iris[,!(names(iris) \%in\% "Species")]
@@ -95,9 +103,8 @@ head(p)
 ## plot:
 plot(som)
 dev.off()
-plot(som, predict = som@predict(setosa))
-plot(som, predict = som@predict(versicolor), add = TRUE, pch.col = "magenta", pch = 17)
-plot(som, predict = som@predict(virginica), add = TRUE, pch.col = "white", pch = 8)
+plot(som, predict = predict(som, setosa))
+plot(som, predict = predict(som, versicolor), add = TRUE, pch.col = "magenta", pch = 17)
+plot(som, predict = predict(som, virginica), add = TRUE, pch.col = "white", pch = 8)
 
 }
-

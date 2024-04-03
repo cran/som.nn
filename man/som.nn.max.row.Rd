@@ -4,19 +4,24 @@
 \alias{som.nn.max.row}
 \title{Special version of maximum finder for SOMnn}
 \usage{
-som.nn.max.row(x)
+som.nn.max.row(x, strict = 0.8)
 }
 \arguments{
 \item{x}{data.frame or matrix}
+
+\item{strict}{minimum for max vote}
 }
 \value{
 index of max value for each row or 0, if more
-          than one element has the same maximum value.
+than one element has the same maximum value.
 }
 \description{
 Returns the index of the column with the maximum value for each row of a
 data.frame.
+}
+\details{
+A class is only assigned, if the vote for one class is higher than for
+all others.
 If more than one element has the same maximum value, 0 is returned.
 }
 \keyword{internal}
-

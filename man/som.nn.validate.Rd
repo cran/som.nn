@@ -16,20 +16,21 @@ A column with correct class labels is needed. The column with class
 lables is selected by the slot \code{class.idx} of the model.}
 }
 \value{
-S4 object of type \code{\link{SOMnn}} with the unchanged model and the
-                test statistics for the test data.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    S4 object of type \code{\link{SOMnn}} with the unchanged model and the
+            test statistics for the test data.
+}\if{html}{\out{</div>}}
 }
 \description{
 A model of type \code{SOMnn} is tested with a validation dataset. The dataset must
 include a column with correct class labels.
-The model is used to predict class labels. Confusion table, 
+The model is used to predict class labels. Confusion table,
 specificity, sensitivity and accuracy for each class are calculated.
 }
 \details{
-Parameters stored in the model are applied for k-NN-like prediction. If necessary 
+Parameters stored in the model are applied for k-NN-like prediction. If necessary
 the parameters can be changed by \code{\link{som.nn.set}} before testing.
 
-The funcion is only a wrapper and actually calls \code{som.nn.continue} with the test data and 
+The funcion is only a wrapper and actually calls \code{som.nn.continue} with the test data and
 without training (i.e. \code{len = 0}).
 }
 \examples{
@@ -38,14 +39,15 @@ data(iris)
 species <- iris$Species
 
 ## train with default radius = diagonal / 2:
+rlen <- 500
 som <- som.nn.train(iris, class.col = "Species", kernel = "internal",
-                    xdim = 15, ydim = 9, alpha = 0.2, len = 10000, 
+                    xdim = 15, ydim = 9, alpha = 0.2, len = rlen, 
                     norm = TRUE, toroidal = FALSE)
 
 
 ## continue training with different alpha and radius;
-som <- som.nn.continue(som, iris, alpha = 0.02, len=1000, radius = 5)
-som <- som.nn.continue(som, iris, alpha = 0.02, len=1000, radius = 2)
+som <- som.nn.continue(som, iris, alpha = 0.02, len=500, radius = 5)
+som <- som.nn.continue(som, iris, alpha = 0.02, len=500, radius = 2)
 
 ## predict some samples:
 unk <- iris[,!(names(iris) \%in\% "Species")]
@@ -65,9 +67,8 @@ head(p)
 ## plot:
 plot(som)
 dev.off()
-plot(som, predict = som@predict(setosa))
-plot(som, predict = som@predict(versicolor), add = TRUE, pch.col = "magenta", pch = 17)
-plot(som, predict = som@predict(virginica), add = TRUE, pch.col = "white", pch = 8)
+plot(som, predict = predict(som, setosa))
+plot(som, predict = predict(som, versicolor), add = TRUE, pch.col = "magenta", pch = 17)
+plot(som, predict = predict(som, virginica), add = TRUE, pch.col = "white", pch = 8)
 
 }
-

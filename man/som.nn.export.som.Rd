@@ -10,12 +10,12 @@ som.nn.export.som(model)
 \item{model}{model of type \code{SOMnn}.}
 }
 \value{
-List of type \code{SOM} with the trained som.
-                See \code{\link[class]{SOM}} for details.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    List of type \code{SOM} with the trained som.
+            See \code{\link[class]{SOM}} for details.
+}\if{html}{\out{</div>}}
 }
 \description{
 An existing model of type \code{SOMnn} is exported as
-object of type \code{SOM} for use with the tools of the 
+object of type \code{SOM} for use with the tools of the
 package \code{class}.
 }
-

@@ -17,7 +17,7 @@ rounded.}
 }
 \value{
 \code{data.frame} with roundes rows of class probabilities.
-        other columns are not affected.
+other columns are not affected.
 }
 \description{
 Each row of the \code{data.frame} may sum up to 1.0
@@ -25,4 +25,3 @@ before and after rounding.
 Rounding is performed with \code{round.probabilities}.
 }
 \keyword{internal}
-

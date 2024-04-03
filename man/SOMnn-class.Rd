@@ -2,8 +2,8 @@
 % Please edit documentation in R/SOMnn.R
 \docType{class}
 \name{SOMnn-class}
-\alias{SOMnn}
 \alias{SOMnn-class}
+\alias{SOMnn}
 \title{An S4 class to hold a model for the topological classifier som.nn}
 \description{
 Objects of type \code{SOMnn} can be created by training a self-organising map
@@ -44,8 +44,8 @@ data.}
 \item{\code{measures}}{\code{data.frame} with classes as rows and the
 columns sensitivity, specificity and accuracy for each class.}
 
-\item{\code{predict}}{predict function to be used to predict unknowm samples \code{x} as
-\code{object@predict(x)}.}
+\item{\code{accuracy}}{The overall accuracy calculated based on the confusion matrix cmat:
+\eqn{acc = sum(diag(cmat)) / sum(cmat)}.}
 
 \item{\code{xdim}}{number of neurons in x-direction of the som.}
 
@@ -58,5 +58,8 @@ columns sensitivity, specificity and accuracy for each class.}
 \item{\code{dist.fun}}{\code{function}; kernel for the kNN classifier.}
 
 \item{\code{max.dist}}{maximum distance for the kNN classifier.}
+
+\item{\code{strict}}{Minimum vote for the winner (if the winner's vote is smaller than strict,
+"unknown" is reported as class label (\code{default = 0.8}).}
 }}
 

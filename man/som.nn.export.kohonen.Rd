@@ -12,15 +12,15 @@ som.nn.export.kohonen(model, train)
 \item{train}{training data}
 }
 \value{
-Vist of type \code{kohonen} with the trained som.
-                See \code{\link[kohonen]{som}} for details.
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    Vist of type \code{kohonen} with the trained som.
+            See \code{\link[kohonen]{som}} for details.
+}\if{html}{\out{</div>}}
 }
 \description{
 An existing model of type \code{SOMnn} is exported as
-object of type \code{kohonen} for use with the tools of the 
+object of type \code{kohonen} for use with the tools of the
 package \code{kohonen}.
 }
 \details{
 Training data is necessary to generate the kohonen object.
 }
-

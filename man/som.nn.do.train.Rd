@@ -4,9 +4,27 @@
 \alias{som.nn.do.train}
 \title{Work hourse for hexagonal som training}
 \usage{
-som.nn.do.train(x, class.idx, kernel = "internal", xdim, ydim, toroidal, len,
-  alpha, radius = 0, norm, norm.center, norm.scale, dist.fun, max.dist, name,
-  continue, len.total, codes)
+som.nn.do.train(
+  x,
+  class.idx,
+  kernel = "internal",
+  xdim,
+  ydim,
+  toroidal,
+  len,
+  alpha,
+  radius = 0,
+  norm,
+  norm.center,
+  norm.scale,
+  dist.fun,
+  max.dist,
+  strict,
+  name,
+  continue,
+  len.total,
+  codes = NULL
+)
 }
 \arguments{
 \item{x}{data.fame with training data. Samples are requested as rows and taken randomly for the
@@ -43,9 +61,13 @@ distance-dependent weights. Any distance function must accept the two parameters
 \code{x} (distance) and \code{sigma} (maximum distance to give a weight > 0.0).}
 
 \item{max.dist}{parameter for k-NN prediction. Parameter \code{sigma} for dist.fun.
-In order to avoid rounding issues, it is recommended not to 
-use exact integers as limit, but values like 1.1 to make sure, that all 
+In order to avoid rounding issues, it is recommended not to
+use exact integers as limit, but values like 1.1 to make sure, that all
 neurons with distance 1 are included.}
+
+\item{strict}{difference of maximum votes to assign class label
+(if the difference between the to two votes is smaller or equal to
+strict, unknown is predicted). \code{default = 0.3.}}
 
 \item{name}{name for the model. Name will be stored as slot \code{model@name} in the
 trained model.}
@@ -55,14 +77,14 @@ as initial codes.}
 
 \item{len.total}{number of previuos training steps.}
 
-\item{model}{model of type \code{SOMnn}.}
+\item{codes}{codes of a model to be used for initialisation.}
 }
 \value{
-S4 object of type \code{\link{SOMnn}} with the trained model
+\if{html}{\out{<div class="sourceCode">}}\preformatted{    S4 object of type \code{\link{SOMnn}} with the trained model
+}\if{html}{\out{</div>}}
 }
 \description{
-The function is called by \code{\link{som.nn.train}} and \code{\link{som.nn.continue}} 
+The function is called by \code{\link{som.nn.train}} and \code{\link{som.nn.continue}}
 to train self-organising map with hexagonal tolology.
 }
 \keyword{internal}
-
